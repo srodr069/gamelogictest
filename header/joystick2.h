@@ -93,15 +93,16 @@ void jstest1(unsigned char i, unsigned char j){ // where i = x coord, j = y coor
 
         _up = 0;
 
-        i = i;
-
-        j = j;
 
     }
 
+    //LCD_SetPixel(i, j, LCD_BLUE);
+
 }
 
-void jstest2(unsigned char k, unsigned char l){
+unsigned char jstest2(){
+
+    unsigned char direction;
 
     x2 = ADC_Read(3);
 
@@ -111,9 +112,7 @@ void jstest2(unsigned char k, unsigned char l){
 
         led2 = 0x80;
 
-        _left2 = 1; //left
-
-        k--;
+        direction = 1; //left
 
     }
 
@@ -121,9 +120,7 @@ void jstest2(unsigned char k, unsigned char l){
 
         led2 = 0x40; //right
 
-        _right2 = 1;
-
-        k++;
+        direction = 2;
 
     }
 
@@ -131,9 +128,7 @@ void jstest2(unsigned char k, unsigned char l){
 
         led2 = 0x20; //up
 
-        _up2 = 1;
-
-        l++;
+        direction = 3; 
 
     }
 
@@ -141,25 +136,19 @@ void jstest2(unsigned char k, unsigned char l){
 
         led2 = 0x10; //down
 
-        _down2 = 1;
-
-        l--;
+        direction = 4;
 
     }
 
     else{
 
-        led2 = 0x00;
-
-        _left2 = 0;
-
-        _right2 = 0;
-
-        _down2 = 0;
-
-        _up2 = 0;
+        direction = 0;
 
     }
+
+    return direction;
+
+    //LCD_SetPixel(k, l, LCD_MAGENTA);
 
 }
 
