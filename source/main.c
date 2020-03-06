@@ -36,6 +36,16 @@
 	unsigned char y1 = 0;
 	unsigned char way = 0;
 
+	unsigned char rex1 = 2; //right x edge 1, for border
+	unsigned char rex2 = 3; //right x edge 2, for border
+	unsigned char lex1 = 128; //left x edge 1, for border
+	unsigned char lex2 = 129; //left x edge 2, for border
+
+	unsigned char tey1 = 127; //top y edge 1, for border
+	unsigned char tey2 = 128; //top y edge 2, for border
+	unsigned char bey1 = 1; //bottom y edge 1, for border
+	unsigned char bey2 = 2; //bottom y edge 2, for border
+
 
 int main(void)
 {
@@ -46,9 +56,9 @@ int main(void)
 	TimerOn();
 
 	x0 = 50;
-	x1 = 90;
+	x1 = 120;
 	y0 = 50;
-	y1 = 50;
+	y1 = 90;
 
 
 	LCD_init();
@@ -63,10 +73,27 @@ int main(void)
 	_delay_ms(70);
 	//LCD_Orientation(LCD_ROT_0);
 	*/
+	for(int i = 129; i >= 2; i--){
+		LCD_SetPixel(i, 128, LCD_RED);
+		LCD_SetPixel(i, 127, LCD_RED);
+		LCD_SetPixel(i, 1, LCD_RED);
+		LCD_SetPixel(i, 2, LCD_RED);
+	}
+
+	for(int v = 128; v >= 1; v--){
+		LCD_SetPixel(129, v, LCD_RED);
+		LCD_SetPixel(128, v, LCD_RED);
+		LCD_SetPixel(2, v, LCD_RED);
+		LCD_SetPixel(3, v, LCD_RED);
+	}
 
 	LCD_SetPixel(50, 50, LCD_BLUE );
 
-	LCD_SetPixel(90, 50, LCD_MAGENTA );
+	LCD_SetPixel(120, 90, LCD_MAGENTA );
+
+	//Border definition
+
+
 	
 
 	
@@ -92,7 +119,7 @@ int main(void)
 		sprintf(buffer, "Y2=%d   ", ADC_Value);
 		LCD_String_xy(2, 8, buffer);
 		jstest1(x0, y0);
-		way = jstest2();
+		way = jstest2(); //switching from void to unsigned char
 
 		switch(way){
 			case 1:
