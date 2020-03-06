@@ -28,7 +28,7 @@ void LCD_Char (char char_data)						/* LCD data write function */
 	_delay_ms(1);									/* Wait little bit */
 }
 
-void LCD_Init (void)								/* LCD Initialize function */
+void LCD_Init16 (void)								/* LCD Initialize function */
 {
 	LCD_Command_Dir |= (1<<RS)|(1<<RW)|(1<<EN);		/* Make LCD command port direction as o/p */
 	LCD_Data_Dir = 0xFF;							/* Make LCD data port direction as o/p */

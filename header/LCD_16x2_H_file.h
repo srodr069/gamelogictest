@@ -21,7 +21,7 @@
 
 void LCD_Command (char);				/* LCD command write function */
 void LCD_Char (char);					/* LCD data write function */
-void LCD_Init (void);					/* LCD Initialize function */
+void LCD_Init16 (void);					/* LCD Initialize function */
 void LCD_String (char*);				/* Send string to LCD function */
 void LCD_String_xy (char,char,char*);	/* Send row, position and string to LCD function */
 void LCD_Clear (void);					/* LCD clear function */
