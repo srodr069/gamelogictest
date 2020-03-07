@@ -131,13 +131,13 @@ int main(void)
 		switch(way){  // using newly returned direction variable from char func to set direction
 			case 0x01: //changing cases from 1 2 3 4 direction identifiers to notable opposites
 				if(prevway == 0xFE || blockleft){// 0x01 is left
-					blockleft = 1;
+					blockleft = 0;				//for whatever reason when going left, blockleft is set to 1, but movement does not stop, everything functions correctly,but this only happens on left/right, not up down/
 					blockright = 0;
 					blockup = 0;
 					blockdown = 0;
 					break;
 				}
-				else {
+				else {							// if the new direction is accepted, your previous direction becomes this, and u block the oposing direction
 					x1--;
 					prevway = 0x01;
 					blockright = 1;
@@ -145,9 +145,9 @@ int main(void)
 				break;
 
 			case 0xFE: //0xFE is right
-				if(prevway == 0x01 || blockright){
-					blockleft = 0;
-					blockright = 1;
+				if(prevway == 0x01 || blockright){ //after being unsuccessful with a check after the switch
+					blockleft = 0;					// i tried to implement a previous direction check in the switch itself
+					blockright = 0;					//if u went right previously u should be unable to go left
 					blockup = 0;
 					blockdown = 0;
 					break;
@@ -155,6 +155,7 @@ int main(void)
 				else {
 					x1++;
 					prevway = 0xFE;
+					blockleft = 1;
 				}
 			break;
 
@@ -162,13 +163,14 @@ int main(void)
 				if(prevway == 0xFD || blockup){
 					blockleft = 0;
 					blockright = 0;
-					blockup = 1;
+					blockup = 0;
 					blockdown = 0;
 					break;
 				}
 				else {
 					y1++;
 					prevway = 0x02;
+					blockdown = 1;
 				}
 			break;
 
@@ -177,12 +179,13 @@ int main(void)
 					blockleft = 0;
 					blockright = 0;
 					blockup = 0;
-					blockdown = 1;
+					blockdown = 0;
 					break;
 				}
 				else {
 					y1--;
 					prevway = 0xFD;
+					blockup = 1;
 				}
 			break;
 
