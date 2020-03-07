@@ -112,7 +112,7 @@ unsigned char jstest2(){
 
         led2 = 0x80;
 
-        direction = 1; //left
+        direction = 0x01; //left
 
     }
 
@@ -120,7 +120,7 @@ unsigned char jstest2(){
 
         led2 = 0x40; //right
 
-        direction = 2;
+        direction = 0xFE;
 
     }
 
@@ -128,7 +128,7 @@ unsigned char jstest2(){
 
         led2 = 0x20; //up
 
-        direction = 3; 
+        direction = 0x02; 
 
     }
 
@@ -136,13 +136,13 @@ unsigned char jstest2(){
 
         led2 = 0x10; //down
 
-        direction = 4;
+        direction = 0xFD;
 
     }
 
     else{
 
-        direction = 0;
+        //direction = 0;
 
     }
 

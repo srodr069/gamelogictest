@@ -30,11 +30,13 @@
 #include "timer.h"			//timer 
 
 
-	unsigned char x0 = 0;
-	unsigned char x1 = 0;
-	unsigned char y0 = 0;
-	unsigned char y1 = 0;
-	unsigned char way = 0;
+	unsigned char x0 = 0; //player 1 x
+	unsigned char x1 = 0; //player 2 x
+	unsigned char y0 = 0; //player 1 y
+	unsigned char y1 = 0; //player 2 y
+	unsigned char way = 0; //direction
+	unsigned char prevway = 0;
+	 //previous direction
 
 	unsigned char rex1 = 2; //right x edge 1, for border
 	unsigned char rex2 = 3; //right x edge 2, for border
@@ -46,20 +48,25 @@
 	unsigned char bey1 = 1; //bottom y edge 1, for border
 	unsigned char bey2 = 2; //bottom y edge 2, for border
 
+	unsigned char blockleft = 0;
+	unsigned char blockright = 0;
+	unsigned char blockup = 0;
+	unsigned char blockdown = 0;
+
 
 int main(void)
 {
 	DDRB = 0xFF; PORTB = 0x00;
 	char buffer[20];
 	int ADC_Value;
-	TimerSet(1);
+	TimerSet(10);
 	TimerOn();
 
 	x0 = 50;
-	x1 = 120;
+	x1 = 90;
 	y0 = 50;
-	y1 = 90;
-
+	y1 = 50;
+	prevway = 75;
 
 	LCD_init();
 	LCD_FillScreen( LCD_RGB(0,0,0) );
@@ -89,7 +96,7 @@ int main(void)
 
 	LCD_SetPixel(50, 50, LCD_BLUE );
 
-	LCD_SetPixel(120, 90, LCD_MAGENTA );
+	LCD_SetPixel(90, 50, LCD_MAGENTA );
 
 	//Border definition
 
@@ -103,39 +110,80 @@ int main(void)
 
 	while(1){
 		ADC_Value = ADC_Read(0);		/* Read the status on X-OUT pin using channel 0 */
-		sprintf(buffer, "X=%d   ", x1);
+		sprintf(buffer, "BL=%d   ", blockleft);
 		LCD_String_xy(1, 0, buffer);
 		
 		ADC_Value = ADC_Read(1);		/* Read the status on Y-OUT pin using channel 0 */
-		sprintf(buffer, "Y=%d   ", y1);
+		sprintf(buffer, "BR=%d   ", blockright);
 		LCD_String_xy(1, 8, buffer);
 
 		ADC_Value = ADC_Read(3);		/* First  */
 		
-		sprintf(buffer, "X2=%d   ", ADC_Value);
+		sprintf(buffer, "BU=%d   ", blockup);
 		LCD_String_xy(2, 0, buffer);
 
 		ADC_Value = ADC_Read(4);
-		sprintf(buffer, "Y2=%d   ", ADC_Value);
+		sprintf(buffer, "BD=%d   ", blockdown);
 		LCD_String_xy(2, 8, buffer);
 		jstest1(x0, y0);
-		way = jstest2(); //switching from void to unsigned char
+		way = jstest2(); //"switching to(from) void" to unsigned char
 
-		switch(way){
-			case 1:
-			x1--;
+		switch(way){  // using newly returned direction variable from char func to set direction
+			case 0x01: //changing cases from 1 2 3 4 direction identifiers to notable opposites
+				if(prevway == 0xFE || blockleft){// 0x01 is left
+					blockleft = 1;
+					blockright = 0;
+					blockup = 0;
+					blockdown = 0;
+					break;
+				}
+				else {
+					x1--;
+					prevway = 0x01;
+					blockright = 1;
+				}
+				break;
+
+			case 0xFE: //0xFE is right
+				if(prevway == 0x01 || blockright){
+					blockleft = 0;
+					blockright = 1;
+					blockup = 0;
+					blockdown = 0;
+					break;
+				}
+				else {
+					x1++;
+					prevway = 0xFE;
+				}
 			break;
 
-			case 2:
-			x1++;
+			case 0x02: // 0x02 is up
+				if(prevway == 0xFD || blockup){
+					blockleft = 0;
+					blockright = 0;
+					blockup = 1;
+					blockdown = 0;
+					break;
+				}
+				else {
+					y1++;
+					prevway = 0x02;
+				}
 			break;
 
-			case 3:
-			y1++;
-			break;
-
-			case 4:
-			y1--;
+			case 0xFD: // 0xFD is down
+				if(prevway == 0x02 || blockdown){
+					blockleft = 0;
+					blockright = 0;
+					blockup = 0;
+					blockdown = 1;
+					break;
+				}
+				else {
+					y1--;
+					prevway = 0xFD;
+				}
 			break;
 
 			case 0:
@@ -145,10 +193,24 @@ int main(void)
 			break;
 
 		}
+		/*
+		if(prevway == 75){ //prevway initialized to 75 to have an init case
+			prevway = way;
+		}
 
-		LCD_SetPixel(x0, y0, LCD_BLUE);
+		else if(way == ~prevway){
+			prevway = prevway;
+		}
+
+		else {
+			prevway = way;
+			
+		} */
 
 		LCD_SetPixel(x1, y1, LCD_MAGENTA);
+		LCD_SetPixel(x0, y0, LCD_BLUE);
+
+		
 
 		/*for(int i = 50; i > 0; i--){
 		LCD_SetPixel(x, 0, LCD_MAGENTA );
