@@ -30,28 +30,8 @@
 #include "timer.h"			//timer 
 
 
-	unsigned char x0 = 0; //player 1 x
-	unsigned char x1 = 0; //player 2 x
-	unsigned char y0 = 0; //player 1 y
-	unsigned char y1 = 0; //player 2 y
-	unsigned char way = 0; //direction
-	unsigned char prevway = 0;
-	 //previous direction
-
-	unsigned char rex1 = 2; //right x edge 1, for border
-	unsigned char rex2 = 3; //right x edge 2, for border
-	unsigned char lex1 = 128; //left x edge 1, for border
-	unsigned char lex2 = 129; //left x edge 2, for border
-
-	unsigned char tey1 = 127; //top y edge 1, for border
-	unsigned char tey2 = 128; //top y edge 2, for border
-	unsigned char bey1 = 1; //bottom y edge 1, for border
-	unsigned char bey2 = 2; //bottom y edge 2, for border
-
-	unsigned char blockleft = 0;
-	unsigned char blockright = 0;
-	unsigned char blockup = 0;
-	unsigned char blockdown = 0;
+	
+	//unsigned char tron[129][128];
 
 
 int main(void)
@@ -59,44 +39,11 @@ int main(void)
 	DDRB = 0xFF; PORTB = 0x00;
 	char buffer[20];
 	int ADC_Value;
-	TimerSet(10);
+	TimerSet(1);
 	TimerOn();
 
-	x0 = 50;
-	x1 = 90;
-	y0 = 50;
-	y1 = 50;
-	prevway = 75;
-
-	LCD_init();
-	LCD_FillScreen( LCD_RGB(0,0,0) );
-	/*LCD_Orientation(LCD_ROT_0);		gotta find xy setup
-	_delay_ms(70);
-	LCD_Orientation(LCD_ROT_180);
-	_delay_ms(70);
-	LCD_Orientation(LCD_ROT_0);
-	_delay_ms(70);
-	LCD_Orientation(LCD_ROT_180);
-	_delay_ms(70);
-	//LCD_Orientation(LCD_ROT_0);
-	*/
-	for(int i = 129; i >= 2; i--){
-		LCD_SetPixel(i, 128, LCD_RED);
-		LCD_SetPixel(i, 127, LCD_RED);
-		LCD_SetPixel(i, 1, LCD_RED);
-		LCD_SetPixel(i, 2, LCD_RED);
-	}
-
-	for(int v = 128; v >= 1; v--){
-		LCD_SetPixel(129, v, LCD_RED);
-		LCD_SetPixel(128, v, LCD_RED);
-		LCD_SetPixel(2, v, LCD_RED);
-		LCD_SetPixel(3, v, LCD_RED);
-	}
-
-	LCD_SetPixel(50, 50, LCD_BLUE );
-
-	LCD_SetPixel(90, 50, LCD_MAGENTA );
+	
+	initGame();
 
 	//Border definition
 
@@ -110,131 +57,28 @@ int main(void)
 
 	while(1){
 		ADC_Value = ADC_Read(0);		/* Read the status on X-OUT pin using channel 0 */
-		sprintf(buffer, "BL=%d   ", blockleft);
+		sprintf(buffer, "X1=%d   ", ADC_Value);
 		LCD_String_xy(1, 0, buffer);
 		
 		ADC_Value = ADC_Read(1);		/* Read the status on Y-OUT pin using channel 0 */
-		sprintf(buffer, "BR=%d   ", blockright);
+		sprintf(buffer, "Y1=%d   ", ADC_Value);
 		LCD_String_xy(1, 8, buffer);
 
 		ADC_Value = ADC_Read(3);		/* First  */
 		
-		sprintf(buffer, "BU=%d   ", blockup);
+		sprintf(buffer, "X2=%d   ", ADC_Value);
 		LCD_String_xy(2, 0, buffer);
 
 		ADC_Value = ADC_Read(4);
-		sprintf(buffer, "BD=%d   ", blockdown);
+		sprintf(buffer, "Y2=%d   ", ADC_Value);
 		LCD_String_xy(2, 8, buffer);
-		jstest1(x0, y0);
-		way = jstest2(); //"switching to(from) void" to unsigned char
-
-		switch(way){  // using newly returned direction variable from char func to set direction
-			case 0x01: //changing cases from 1 2 3 4 direction identifiers to notable opposites
-				if(prevway == 0xFE || blockleft){// 0x01 is left
-					blockleft = 0;				//for whatever reason when going left, blockleft is set to 1, but movement does not stop, everything functions correctly,but this only happens on left/right, not up down/
-					blockright = 0;
-					blockup = 0;
-					blockdown = 0;
-					break;
-				}
-				else {							// if the new direction is accepted, your previous direction becomes this, and u block the oposing direction
-					x1--;
-					prevway = 0x01;
-					blockright = 1;
-				}
-				break;
-
-			case 0xFE: //0xFE is right
-				if(prevway == 0x01 || blockright){ //after being unsuccessful with a check after the switch
-					blockleft = 0;					// i tried to implement a previous direction check in the switch itself
-					blockright = 0;					//if u went right previously u should be unable to go left
-					blockup = 0;
-					blockdown = 0;
-					break;
-				}
-				else {
-					x1++;
-					prevway = 0xFE;
-					blockleft = 1;
-				}
-			break;
-
-			case 0x02: // 0x02 is up
-				if(prevway == 0xFD || blockup){
-					blockleft = 0;
-					blockright = 0;
-					blockup = 0;
-					blockdown = 0;
-					break;
-				}
-				else {
-					y1++;
-					prevway = 0x02;
-					blockdown = 1;
-				}
-			break;
-
-			case 0xFD: // 0xFD is down
-				if(prevway == 0x02 || blockdown){
-					blockleft = 0;
-					blockright = 0;
-					blockup = 0;
-					blockdown = 0;
-					break;
-				}
-				else {
-					y1--;
-					prevway = 0xFD;
-					blockup = 1;
-				}
-			break;
-
-			case 0:
-			break;
-
-			default:
-			break;
-
-		}
-		/*
-		if(prevway == 75){ //prevway initialized to 75 to have an init case
-			prevway = way;
-		}
-
-		else if(way == ~prevway){
-			prevway = prevway;
-		}
-
-		else {
-			prevway = way;
-			
-		} */
-
-		LCD_SetPixel(x1, y1, LCD_MAGENTA);
-		LCD_SetPixel(x0, y0, LCD_BLUE);
-
 		
-
-		/*for(int i = 50; i > 0; i--){
-		LCD_SetPixel(x, 0, LCD_MAGENTA );
-		x++;
+		//while(!gameover){
 		
-		LCD_SetPixel(20, y, LCD_BLUE );
-		y++;
+		 //"switching to(from) void" to unsigned char
 
-
-
-		} */
-
-		//LCD_SetPixel(50, 50, LCD_BLUE );
-
-		//LCD_SetPixel(90, 50, LCD_MAGENTA );
-
-		//LCD_SetPixel(4, 2, LCD_RED );
-
-		//LCD_SetPixel(126, -12, LCD_RED );
-
-		//PORTB = led | led2; dont need no mo
+		gamelogic();
+	
 		while(!TimerFlag){
 			TimerFlag = 0;}
 
