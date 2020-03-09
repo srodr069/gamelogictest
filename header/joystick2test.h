@@ -69,7 +69,7 @@ unsigned char x0 = 0; //player 1 x
     unsigned char tie = 0;
     unsigned char player = 0;
 
-   // unsigned char tron[128][127];
+    unsigned char tron[128][127];
 
 
 
@@ -201,6 +201,20 @@ void gamelogic(){
                     prevway = 0x01;
                     blockright = 1;
                 }
+
+                if((tron[x0][y0] == 1)||(x0 == 3)||(x0 == 128)){
+                    gameover = 1;
+                    player = 2;
+                }
+
+                else {
+                    gameover = 0;
+                    player = 0;
+                    tron[x0][y0] = 1;
+                    LCD_SetPixel(x0, y0, LCD_MAGENTA);
+
+
+                }
                 break;
 
             case 0xFE: //0xFE is right
@@ -215,6 +229,20 @@ void gamelogic(){
                     x0++;
                     prevway = 0xFE;
                     blockleft = 1;
+                }
+
+                if((tron[x0][y0] == 1)||(x0 == 3)||(x0 == 128)){
+                    gameover = 1;
+                    player = 2;
+                }
+
+                else {
+                    gameover = 0;
+                    player = 0;
+                    tron[x0][y0] = 1;
+                    LCD_SetPixel(x0, y0, LCD_MAGENTA);
+
+
                 }
             break;
 
@@ -231,6 +259,20 @@ void gamelogic(){
                     prevway = 0x02;
                     blockdown = 1;
                 }
+
+                if((tron[x0][y0] == 1)||(y0 == 127)||(y0 == 2)){
+                    gameover = 1;
+                    player = 2;
+                }
+
+                else {
+                    gameover = 0;
+                    player = 0;
+                    tron[x0][y0] = 1;
+                    LCD_SetPixel(x0, y0, LCD_MAGENTA);
+
+
+                }
             break;
 
             case 0xFD: // 0xFD is down
@@ -245,6 +287,20 @@ void gamelogic(){
                     y0--;
                     prevway = 0xFD;
                     blockup = 1;
+                }
+
+                if((tron[x0][y0] == 1)||(y0 == 127)||(y0 == 2)){
+                    gameover = 1;
+                    player = 2;
+                }
+
+                else {
+                    gameover = 0;
+                    player = 0;
+                    tron[x0][y0] = 1;
+                    LCD_SetPixel(x0, y0, LCD_MAGENTA);
+
+
                 }
             break;
 
@@ -305,6 +361,19 @@ void gamelogic(){
                     prevway1 = 0x01;
                     blockright1 = 1;
                 }
+
+                if((tron[x1][y1] == 1)||(x1 == 3)||(x1 == 128)){
+                    gameover = 1;
+                    player = 1;
+                }
+
+                else {
+                    gameover = 0;
+                    player = 0;
+                    tron[x1][y1] = 1;
+                    LCD_SetPixel(x1, y1, LCD_BLUE);
+
+                }
                 break;
 
             case 0xFE: //0xFE is right
@@ -319,6 +388,20 @@ void gamelogic(){
                     x1++;
                     prevway1 = 0xFE;
                     blockleft1 = 1;
+                }
+
+                if((tron[x1][y1] == 1)||(x1 == 3)||(x1 == 128)){
+                    gameover = 1;
+                    player = 1;
+                }
+
+                else {
+                    gameover = 0;
+                    player = 0;
+                    tron[x1][y1] = 1;
+                    LCD_SetPixel(x1, y1, LCD_BLUE);
+
+
                 }
             break;
 
@@ -335,6 +418,19 @@ void gamelogic(){
                     prevway1 = 0x02;
                     blockdown1 = 1;
                 }
+
+                if((tron[x1][y1] == 1)||(y1 == 127)||(y1 == 2)){
+                    gameover = 1;
+                    player = 1;
+                }
+
+                else {
+                    gameover = 0;
+                    player = 0;
+                    tron[x1][y1] = 1;
+                    LCD_SetPixel(x1, y1, LCD_BLUE);
+
+                }
             break;
 
             case 0xFD: // 0xFD is down
@@ -350,6 +446,19 @@ void gamelogic(){
                     prevway1 = 0xFD;
                     blockup1 = 1;
                 }
+
+                if((tron[x1][y1] == 1)||(y1 == 127)||(y1 == 2)){
+                    gameover = 1;
+                    player = 1;
+                }
+
+                else {
+                    gameover = 0;
+                    player = 0;
+                    tron[x1][y1] = 1;
+                    LCD_SetPixel(x1, y1, LCD_BLUE);
+
+                }
             break;
 
             case 0:
@@ -359,9 +468,8 @@ void gamelogic(){
             break;
 
         }
-        LCD_SetPixel(x0, y0, LCD_MAGENTA);
-        LCD_SetPixel(x1, y1, LCD_BLUE);
-        /*
+        
+                /*
         if(tron[x1][y1] == 0){
             LCD_SetPixel(x1, y1, LCD_BLUE);
             tron[x1][y1] = 1;
@@ -427,9 +535,11 @@ void initGame(){
         LCD_SetPixel(3, v, LCD_RED);
     }
 
-    LCD_SetPixel(50, 50, LCD_BLUE );
+    LCD_SetPixel(90, 50, LCD_BLUE );
+    //tron[90][50] = 1;
 
-    LCD_SetPixel(90, 50, LCD_MAGENTA );
+    LCD_SetPixel(50, 50, LCD_MAGENTA );
+    //tron[50][50] = 1;
 }
 
 /*    for (int f = 0; f < 128; f++){
