@@ -494,10 +494,10 @@ void gamelogic(){
 }
 
 void initGame(){
-    x0 = 50;
-    x1 = 90;
-    y0 = 50;
-    y1 = 50;
+    x0 = 97;
+    x1 = 35;
+    y0 = 62;
+    y1 = 62;
     prevway = 75;
     prevway1 = 75;
 
@@ -535,10 +535,10 @@ void initGame(){
         LCD_SetPixel(3, v, LCD_RED);
     }
 
-    LCD_SetPixel(90, 50, LCD_BLUE );
+    LCD_SetPixel(97, 62, LCD_BLUE );
     //tron[90][50] = 1;
 
-    LCD_SetPixel(50, 50, LCD_MAGENTA );
+    LCD_SetPixel(35, 62, LCD_MAGENTA );
     //tron[50][50] = 1;
 }
 

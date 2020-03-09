@@ -123,8 +123,8 @@ for(int a = 127; a >= 2; a--){ //y
 		//while(!gameover){
 		
 		 //"switching to(from) void" to unsigned char
-		tron[90][50] = 1;
-		tron[50][50] = 1;
+		tron[97][62] = 1;
+		tron[35][62] = 1;
 		gamelogic();
 
 		
